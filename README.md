@@ -21,7 +21,7 @@ This is the values used in the video which can be found in the example folder.
 
 ```dart
 ZoomOverlay(
-    modalBarrierColor: Colors.black12, // Optional
+    computeModalBarrierColor: (scaleBy) => Color.fromARGB((scaleBy.clamp(0, 1) * 255).floor(), 120, 120, 120), // Optional
     minScale: 0.5, // Optional
     maxScale: 3.0, // Optional
     animationCurve: Curves.fastOutSlowIn, // Defaults to fastOutSlowIn which mimics IOS instagram behavior
@@ -35,15 +35,15 @@ ZoomOverlay(
 
 ## Documentations
 
-| parameter           | documentation                                                                                                                          |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `minScale`          | Specifies the minimum multiplier it can scale outwards.                                                                                |
-| `maxScale`          | Specifies the maximum multiplier the user can zoom inwards.                                                                            |
-| `twoTouchOnly`      | specifies wither the zoom is enabled only with two fingers on the screen. Defaults to `false`.                                         |
-| `child`             | A widget to make zoomable.                                                                                                             |
-| `animationDuration` | Specifies the duration when the zoom has ended and is animating back to it's original place. Defaults to `Duration(milliseconds: 100)` |
-| `animationCurve`    | Specifies the curve when the zoom has ended and is animating back to it's original place. Defaults to `Curves.fastOutSlowIn`           |
-| `modalBarrierColor` | Specifies the color of the background of the modal barrier.                                                                            |
+| parameter                                  | documentation                                                                                                                          |
+|--------------------------------------------| -------------------------------------------------------------------------------------------------------------------------------------- |
+| `minScale`                                 | Specifies the minimum multiplier it can scale outwards.                                                                                |
+| `maxScale`                                 | Specifies the maximum multiplier the user can zoom inwards.                                                                            |
+| `twoTouchOnly`                             | specifies wither the zoom is enabled only with two fingers on the screen. Defaults to `false`.                                         |
+| `child`                                    | A widget to make zoomable.                                                                                                             |
+| `animationDuration`                        | Specifies the duration when the zoom has ended and is animating back to it's original place. Defaults to `Duration(milliseconds: 100)` |
+| `animationCurve`                           | Specifies the curve when the zoom has ended and is animating back to it's original place. Defaults to `Curves.fastOutSlowIn`           |
+| `computeModalBarrierColor(double scaleBy)` | Specifies the color of the background of the modal barrier.                                                                            |
 
 ## Medium blog post
 

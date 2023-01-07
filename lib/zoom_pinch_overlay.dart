@@ -2,6 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vector_math/vector_math_64.dart';
 
+class _DynamicModalBarrier extends StatefulWidget {
+  const _DynamicModalBarrier({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _DynamicModalBarrierState();
+}
+
+class _DynamicModalBarrierState extends State<_DynamicModalBarrier> {
+  Color? _color;
+
+  void setColor(Color? value) {
+    setState(() {
+      _color = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ModalBarrier(color: _color);
+  }
+}
+
 //
 // Transform widget enables the overlay to be updated dynamically
 //
@@ -50,7 +72,7 @@ class ZoomOverlay extends StatefulWidget {
     this.maxScale,
     this.animationDuration = const Duration(milliseconds: 100),
     this.animationCurve = Curves.fastOutSlowIn,
-    this.modalBarrierColor,
+    this.computeModalBarrierColor,
   }) : super(key: key);
 
   /// A widget to make zoomable.
@@ -75,7 +97,7 @@ class ZoomOverlay extends StatefulWidget {
   final Curve animationCurve;
 
   /// Specifies the color of the modal barrier that shows in the background.
-  final Color? modalBarrierColor;
+  final Color? Function(double)? computeModalBarrierColor;
 
   @override
   _ZoomOverlayState createState() => _ZoomOverlayState();
@@ -93,6 +115,7 @@ class _ZoomOverlayState extends State<ZoomOverlay>
   Matrix4 _transformMatrix = Matrix4.identity();
 
   final _transformWidget = GlobalKey<_TransformWidgetState>();
+  final _dynamicModalBarrier = GlobalKey<_DynamicModalBarrierState>();
 
   @override
   void initState() {
@@ -190,6 +213,12 @@ class _ZoomOverlayState extends State<ZoomOverlay>
     if (_transformWidget.currentState != null) {
       _transformWidget.currentState!.setMatrix(_matrix);
     }
+
+    if (_dynamicModalBarrier.currentState != null &&
+        widget.computeModalBarrierColor != null) {
+      _dynamicModalBarrier.currentState!
+          .setColor(widget.computeModalBarrierColor!(scaleby));
+    }
   }
 
   void onScaleEnd(ScaleEndDetails details) {
@@ -212,9 +241,7 @@ class _ZoomOverlayState extends State<ZoomOverlay>
     return IgnorePointer(
       child: Stack(
         children: [
-          ModalBarrier(
-            color: widget.modalBarrierColor,
-          ),
+          _DynamicModalBarrier(key: _dynamicModalBarrier),
           _TransformWidget(
             key: _transformWidget,
             matrix: _transformMatrix,

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,7 +47,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ]),
           ),
           ZoomOverlay(
-              modalBarrierColor: Colors.black12, // optional
+              computeModalBarrierColor: (scaleBy) => Color.fromARGB(
+                  (scaleBy.clamp(0, 1) * 0.9 * 255).floor(),
+                  100,
+                  100,
+                  100), // optional
               minScale: 0.5, // optional
               maxScale: 3.0, // optional
               twoTouchOnly: true,
